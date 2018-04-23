@@ -1,7 +1,7 @@
 <template>
   <div class='headerbar' v-click-outside="closeHeaderPanels">
       <b-navbar type="light" variant="light" fixed="top">
-        <b-navbar-brand left><b-img class="ml-md-1" width="73px" height="44px" src="/dist/images/home-logo.png" style="padding-top:5px;padding-bottom:0px;cursor:pointer;" v-on:click="closeHeaderPanels();$router.push('/');"/></b-navbar-brand>
+        <b-navbar-brand left><b-img class="ml-md-1" width="348px" height="44px" src="/dist/images/home-logo.png" style="padding-top:5px;padding-bottom:0px;cursor:pointer;" v-on:click="closeHeaderPanels();$router.push('/');"/></b-navbar-brand>
         <b-nav-form right>
               <b-container>
                 <b-row>
