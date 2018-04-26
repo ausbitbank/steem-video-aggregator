@@ -429,7 +429,7 @@ new Vue({
         <div id="app">
             <b-alert variant="primary" v-if="!$globals.cookiesAccepted" style="margin-bottom:3px" dismissible :show="showDismissibleAlert" @dismissed="hideCookieNotice">
             <h5>
-            Using multi.tube means you agree to our <a href="#" v-b-toggle.collapse3>use of cookies</a>. 
+            Using steemvids means you agree to our <a href="#" v-b-toggle.collapse3>use of cookies</a>. 
             </h5>
             <b-collapse id="collapse3">
               <b-card>
