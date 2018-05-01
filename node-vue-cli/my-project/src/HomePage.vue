@@ -2,7 +2,9 @@
   <div class='homepage'>
 
     <b-container class="video-horizontal-panel">
-      <h4 style="padding-left:10px"><router-link :to="{ path: '/hot' }">Hot Videos</router-link> <span style="color:red;font-size: 0.7em;" v-if="$globals.filter_not_default"> (filtered)</span> </h4>
+      <h4 style="padding-left:10px"><router-link :to="{ path: '/hot' }">Hot Videos</router-link> 
+        <span style="color:red;font-size: 0.7em;" v-if="$globals.filter_included_tags.length==1" v-text="'(tag: ' + $globals.filter_included_tags[0] + ')'"></span>
+        <span style="color:red;font-size: 0.7em;" v-if="$globals.filter_not_default"> (filtered)</span> </h4>
       <carousel :minSwipeDistance="100" :perPage="1" :perPageCustom="[[601, 2], [801, 3], [1101, 4], [1351, 5], [1600, 6]]" navigationEnabled 
         navigationNextLabel="<img src='/dist/images/right-arrow.png'/>"
         navigationPrevLabel="<img src='/dist/images/left-arrow.png'/>"
@@ -61,7 +63,9 @@
     <hr>
 
     <b-container class="video-horizontal-panel">
-      <h4 style="padding-left:10px"><router-link :to="{ path: '/trending' }">Trending Videos</router-link><span style="color:red;font-size: 0.7em;" v-if="$globals.filter_not_default"> (filtered)</span></h4>
+      <h4 style="padding-left:10px"><router-link :to="{ path: '/trending' }">Trending Videos</router-link>
+        <span style="color:red;font-size: 0.7em;" v-if="$globals.filter_included_tags.length==1" v-text="'(tag: ' + $globals.filter_included_tags[0] + ')'"></span>
+        <span style="color:red;font-size: 0.7em;" v-if="$globals.filter_not_default"> (filtered)</span></h4>
       <carousel :minSwipeDistance="100" :perPage="1" :perPageCustom="[[601, 2], [801, 3], [1101, 4], [1351, 5], [1600, 6]]" navigationEnabled 
         navigationNextLabel="<img src='/dist/images/right-arrow.png'/>"
         navigationPrevLabel="<img src='/dist/images/left-arrow.png'/>"
@@ -120,7 +124,9 @@
     <hr>
 
     <b-container class="video-horizontal-panel">
-      <h4 style="padding-left:10px"><router-link :to="{ path: '/new' }">New Videos</router-link><span style="color:red;font-size: 0.7em;" v-if="$globals.filter_not_default"> (filtered)</span></h4>
+      <h4 style="padding-left:10px"><router-link :to="{ path: '/new' }">New Videos</router-link>
+        <span style="color:red;font-size: 0.7em;" v-if="$globals.filter_included_tags.length==1" v-text="'(tag: ' + $globals.filter_included_tags[0] + ')'"></span>
+        <span style="color:red;font-size: 0.7em;" v-if="$globals.filter_not_default"> (filtered)</span></h4>
       <carousel :minSwipeDistance="100" :perPage="1" :perPageCustom="[[601, 2], [801, 3], [1101, 4], [1351, 5], [1600, 6]]" navigationEnabled 
         navigationNextLabel="<img src='/dist/images/right-arrow.png'/>"
         navigationPrevLabel="<img src='/dist/images/left-arrow.png'/>"
@@ -224,6 +230,8 @@
               filter_included_voters: this.$globals.filter_included_voters,
               filter_excluded_authors: this.$globals.filter_excluded_authors,
               filter_included_authors: this.$globals.filter_included_authors,
+              filter_excluded_tags: this.$globals.filter_excluded_tags,
+              filter_included_tags: this.$globals.filter_included_tags,
               filter_reputation_active: this.$globals.filter_reputation_active,
               filter_quick_play_enabled: this.$globals.filter_quick_play_enabled
             }

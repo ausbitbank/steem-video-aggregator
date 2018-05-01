@@ -2,7 +2,9 @@
   <div class='thumbnailspage'>
 
     <b-container class="video-horizontal-panel">
-      <h4 v-if="videos.length>0" style="padding-left:10px">{{ page_title }}<span style="color:red;font-size: 0.7em;" v-if="$globals.filter_not_default"> (filtered)</span></h4>
+      <h4 v-if="videos.length>0" style="padding-left:10px">{{ page_title }}
+        <span style="color:red;font-size: 0.7em;" v-if="$globals.filter_included_tags.length==1" v-text="'(tag: ' + $globals.filter_included_tags[0] + ')'"></span> 
+        <span style="color:red;font-size: 0.7em;" v-if="$globals.filter_not_default"> (filtered)</span></h4>
       <b-row>
 
         <b-col class="px-0" sm="6" md="4" lg="3" xl="2" v-for="v in videos" :key="v.author + v.permlink">
@@ -48,7 +50,7 @@
         </b-col>
 
         <infinite-loading ref="infiniteLoading" @infinite="infiniteHandler">
-          <span slot="no-results"></span>          
+          <span slot="no-results"></span>
         </infinite-loading>
 
       </b-row>
@@ -106,13 +108,21 @@
               filter_included_voters: this.$globals.filter_included_voters,
               filter_excluded_authors: this.$globals.filter_excluded_authors,
               filter_included_authors: this.$globals.filter_included_authors,
+              filter_excluded_tags: this.$globals.filter_excluded_tags,
+              filter_included_tags: this.$globals.filter_included_tags,
               filter_reputation_active: this.$globals.filter_reputation_active,
               filter_quick_play_enabled: this.$globals.filter_quick_play_enabled
             }
         var rr = this;
         setTimeout(function() {
           var rrr = rr;
-          rr.$http.post(rr.video_list_url + '/' + rr.thumbnail_target, filter_data)
+
+          var query_string = '';
+          if (rr.video_list_url == '/f/api/account-videos') {
+            query_string = '/' + rr.$route.params.author;
+          }
+
+          rr.$http.post(rr.video_list_url + query_string + '/' + rr.thumbnail_target, filter_data)
            .then(response => {
             rrr.videos = response.data.filter(function(result) {
               return true;
@@ -136,11 +146,19 @@
               filter_included_voters: this.$globals.filter_included_voters,
               filter_excluded_authors: this.$globals.filter_excluded_authors,
               filter_included_authors: this.$globals.filter_included_authors,
+              filter_excluded_tags: this.$globals.filter_excluded_tags,
+              filter_included_tags: this.$globals.filter_included_tags,
               filter_reputation_active: this.$globals.filter_reputation_active,
               filter_quick_play_enabled: this.$globals.filter_quick_play_enabled
             }
         // gets whole new results set rather than extending, as new entries could make using offsets difficult
-        this.$http.post(this.video_list_url + '/' + this.thumbnail_target, filter_data)
+        var query_string = '';
+        if (this.video_list_url == '/f/api/account-videos') {
+          query_string = '/' + this.$route.params.author;
+        }
+
+//        this.$http.post(this.video_list_url + '/' + this.thumbnail_target, filter_data)
+        this.$http.post(this.video_list_url + query_string + '/' + this.thumbnail_target, filter_data)
          .then(response => {
             console.log(response.body.length);
             this.videos = response.data.filter(function(result) {

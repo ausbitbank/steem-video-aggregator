@@ -143,6 +143,22 @@ def apply_filter_to_query(original_query, filter_data):
     if voter_filter_list:
         new_query = new_query.filter(or_(*voter_filter_list))
 
+    # tag exclusions filter (removes posts with any of first tags in filter)
+    exclusions_list = filter_data.get('filter_excluded_tags', [])[:10]
+    tags_filter_list = []
+    for account in exclusions_list:
+        tags_filter_list.append(Post.tags_ts_vector.match(account, postgresql_regconfig='english'))
+    if tags_filter_list:
+        new_query = new_query.filter(not_(or_(*tags_filter_list)))
+
+    # tag inclusions filter (requires posts with any of first tags in filter)
+    inclusions_list = filter_data.get('filter_included_tags', [])[:10]
+    tags_filter_list = []
+    for account in inclusions_list:
+        tags_filter_list.append(Post.tags_ts_vector.match(account, postgresql_regconfig='english'))
+    if tags_filter_list:
+        new_query = new_query.filter(or_(*tags_filter_list))
+
     return new_query
 
 def apply_sort_to_query(original_query, filter_data):
@@ -202,6 +218,27 @@ def new_videos(limit="30"):
     filter_data = {}
     try:
         query = db.session.query(Post)
+        if request.method == 'POST':
+            data = request.data
+            filter_data = json.loads(data)
+            query = apply_filter_to_query(query, filter_data)
+        # get more records than needed as post query filters may remove some
+        query = query.order_by(Post.created.desc()).limit(int(limit*1.2))
+        df = pd.read_sql(query.statement, db.session.bind)
+        df = create_video_summary_fields(df, filter_data)
+        df = df.head(limit)
+        return df.to_json(orient='records')
+    except Exception as e:
+        return str(e)
+
+@app.route('/f/api/account-videos/<author>/<limit>', methods=['GET', 'POST'])
+@app.route('/f/api/account-videos/<author>', methods=['GET', 'POST'])
+def account_videos(author, limit="30"):
+    limit = int(limit)
+    filter_data = {}
+    try:
+        author_filter = (Post.author == author)
+        query = db.session.query(Post).filter(author_filter)
         if request.method == 'POST':
             data = request.data
             filter_data = json.loads(data)
