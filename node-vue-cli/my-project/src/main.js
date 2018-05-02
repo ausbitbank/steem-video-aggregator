@@ -138,7 +138,7 @@ const globals = new Vue({
         }
 
         sc2.init({
-          baseURL: 'https://v2.steemconnect.com/',
+          baseURL: 'https://v2.steemconnect.com',
           app: 'steemvids.app',
           callbackURL: callbackURL,
           scope: ['vote', 'comment', 'comment_delete', 'comment_options', 'custom_json']
